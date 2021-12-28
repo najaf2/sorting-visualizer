@@ -1,6 +1,8 @@
+
 let outer = document.getElementById("outer");
 // Create random vals
 randomize();
+
 
 function randomize() {
     // Remove all the vals that are already there
@@ -9,7 +11,7 @@ function randomize() {
     }
 
     // Create 20 divs with differing heights
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 200; i++) {
         // Create a val and set its id
         val = document.createElement('div');
         val.id = "vals"
@@ -22,8 +24,10 @@ function randomize() {
 
 }
 arrVals = document.querySelectorAll("#vals");
+let visited = new Array(arrVals.length)
+visited.fill(0, 0, arrVals.length-1)
 
-async function bubbleSort(delay = 50) {
+async function bubbleSort(delay = 10) {
     let n = arrVals.length;
     for (let i = 0; i < n; i++) {
         for (let j = 0; j < n - i - 1; j++) {
@@ -49,7 +53,7 @@ async function bubbleSort(delay = 50) {
                     resolve();
                 }, delay)
             );
-                await swap(arrVals[j], arrVals[j + 1]);
+                await swap(arrVals[j], arrVals[j + 1], delay/3);
 
                 arrVals = document.querySelectorAll("#vals");
             }
@@ -63,7 +67,7 @@ async function bubbleSort(delay = 50) {
 }
 
 // Promise to swap two blocks
-function swap(x, y) {
+function swap(x, y, delay) {
     return new Promise((resolve) => {
         let temp = x.style.transform;
         x.style.transform = y.style.transform;
@@ -295,8 +299,109 @@ async function insertionSort(delay = 100) {
         }
 }
 
+// Javascript program in-place Merge Sort
+ 
+// Merges two subarrays of arr[].
+// First subarray is arr[l..m]
+// Second subarray is arr[m+1..r]
+// Inplace Implementation
+async function merge(start, mid, end, delay)
+{
+    let start2 = mid + 1;
+ 
+    // If the direct merge is already sorted
+    if (Number(arrVals[mid].style.height.replace("vh", "")) <= Number(arrVals[start2].style.height.replace("vh", "")))
+    {
+        return;
+    }
+ 
+    // Two pointers to maintain start
+    // of both arrays to merge
+    while (start <= mid && start2 <= end)
+    {
+        arrVals[start].style.backgroundColor = "red" 
+        arrVals[end].style.backgroundColor = "red" 
+        
+
+        await timeout(delay);
+        // If element 1 is in right place
+        if (Number(arrVals[start].style.height.replace("vh", "")) <= Number(arrVals[start2].style.height.replace("vh", "")))
+        {
+            arrVals[start].style.backgroundColor = "white" 
+            arrVals[end].style.backgroundColor = "white" 
+            start++;
+        }
+        else
+        {
+            let value = Number(arrVals[start2].style.height.replace("vh", ""));
+            let index = start2;
+ 
+            // Shift all the elements between element 1
+            // element 2, right by 1.
+            while (index != start)
+            {
+                arrVals[index].style.height = arrVals[index - 1].style.height.toString();
+                index--;
+            }
+            arrVals[start].style.height = value.toString() + "vh";
+
+            // Update all the pointers
+            arrVals[start].style.backgroundColor = "white" 
+            arrVals[end].style.backgroundColor = "white" 
+
+            start++;
+            mid++;
+            start2++;
+        }
+    }
+}
+
+async function changeColors(l, r, delay){
+    for (let i = 0; i < arrVals.length; i++) {
+        arrVals[i].style.backgroundColor = "white" 
+
+        if (visited[i] == 1) {
+            await new Promise((resolve) =>
+            setTimeout(() => {
+                resolve();
+            }, delay/3));
+
+            arrVals[i].style.backgroundColor = "lime"
+        }
+    }
+ 
+    for (let i = l; i <= r+1; i++) {
+        visited[i] = 1
+    }
+}
+ 
+
+async function mergeSort(l, r, delay = 10)
+{
+    if (l < r)
+    {
+        // Same as (l + r) / 2, but avoids overflow
+        // for large l and r
+        let m = l + Math.floor((r - l) / 2);
+ 
+        // Sort first and second halves
+        await mergeSort(l, m);
+        await mergeSort(m + 1, r);
+        await merge(l, m, r, delay);
+        await changeColors(l, m, delay)
+        await timeout(delay)
+    }
+}
+
+function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 // selectionSort();
-// bubbleSort();
+bubbleSort();
 // radixBucketSort();
-insertionSort();
+// insertionSort();
+// mergeSort(0, arrVals.length-1)
+
+
 

@@ -512,11 +512,11 @@ async function HeapSort(delay = 100) {
 
 }
 
-// selectionSort(); //17sec
+selectionSort(); //17sec
 // bubbleSort(); //22sec
 // radixBucketSort(); //16sec
 // insertionSort(); //39sec
 // mergeSort(0, arrVals.length-1) //22sec
-HeapSort()
+// HeapSort()
 
 

@@ -28,6 +28,6 @@ body {
     background-color: white;
     border: 1px solid black;
     bottom: 0px;
-    transition: 0.1s all ease-in;
+    transition: 0.05s all ease-in;
     margin: 0.05vw;
 }

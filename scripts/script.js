@@ -41,9 +41,17 @@ async function bubbleSort(delay = 50) {
 
             // To compare value of two vals
             if (value1 > value2) {
+                
+                arrVals[j].style.backgroundColor = "#B8477F";
+                arrVals[j + 1].style.backgroundColor = "#47B880";
+                await new Promise((resolve) =>
+                setTimeout(() => {
+                    resolve();
+                }, delay)
+            );
                 await swap(arrVals[j], arrVals[j + 1]);
-                arrVals = document.querySelectorAll("#vals");
 
+                arrVals = document.querySelectorAll("#vals");
             }
             arrVals[j].style.backgroundColor = "white";
             arrVals[j + 1].style.backgroundColor = "white";
@@ -134,7 +142,7 @@ async function radixBucketSort(delay = 100) {
             await new Promise((resolve) =>
                 setTimeout(() => {
                     resolve();
-                }, delay)
+                }, 50)
             );
             curr = Number(arrVals[idx1].style.height.replace("vh", ""));
             currLen = curr.toString().length;
@@ -231,9 +239,64 @@ async function radixBucketSort(delay = 100) {
 
 }
 
+async function insertionSort(delay = 100) {
+    let n = arrVals.length;
+        arrVals[0].style.backgroundColor = "#B8477F";
 
+        for (let i = 1; i < n; i++) {
+            // Choosing the first element in our unsorted subarray
+            let current = Number(arrVals[i].style.height.replace("vh", ""));
+            arrVals[i].style.backgroundColor = "#B8477F";
+
+            console.log(current)
+            // The last element of our sorted subarray
+            let j = i - 1; 
+
+            await new Promise((resolve) =>
+            setTimeout(() => {
+                resolve();
+            }, delay)
+            );
+            
+            while ((j > -1) && (current < Number(arrVals[j].style.height.replace("vh", "")))) {
+                await new Promise((resolve) =>
+                setTimeout(() => {
+                    resolve();
+                }, delay));
+
+                arrVals[j+1].style.height = arrVals[j].style.height;
+                arrVals[j].style.backgroundColor = "red"
+                if (j > 0) {
+                    arrVals[j-1].style.backgroundColor = "red"
+                }
+
+
+                await new Promise((resolve) =>
+                setTimeout(() => {
+                    resolve();
+                }, delay));
+                j--;
+
+                for(let k = i; k >= 0; k--){
+                    arrVals[k].style.backgroundColor = "lime";
+                }
+
+            }
+            arrVals[j+1].style.height = current.toString() + "vh";
+
+
+            await new Promise((resolve) =>
+                setTimeout(() => {
+                resolve();
+            }, delay)
+            );
+
+            arrVals[i].style.backgroundColor = "lime"
+        }
+}
 
 // selectionSort();
 // bubbleSort();
-radixBucketSort();
+// radixBucketSort();
+insertionSort();
 

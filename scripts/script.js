@@ -1,5 +1,6 @@
 
 let outer = document.getElementById("outer");
+
 // Create random vals
 randomize();
 
@@ -11,7 +12,7 @@ function randomize() {
     }
 
     // Create 20 divs with differing heights
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 100; i++) {
         // Create a val and set its id
         val = document.createElement('div');
         val.id = "vals"
@@ -512,11 +513,73 @@ async function HeapSort(delay = 100) {
 
 }
 
+function getHeightAsNum(elem) {
+    return Number(elem.style.height.replace("vh", ""))
+}
+
+async function Bogosort(arr = arrVals){
+    var isSorted = function(arr){
+        for(var i = 1; i < arr.length; i++){
+            if (getHeightAsNum(arr[i-1]) > getHeightAsNum(arr[i])) {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    async function shuffle(arr) {
+        for (var i = arr.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = getHeightAsNum(arr[i]) + "vh";
+            arr[i].style.height = arr[j].style.height;
+            arr[j].style.height = temp;
+            console.log("swap")
+        }
+
+        return arr
+    }
+      
+
+    async function sort(arr){
+        var sorted = false;
+        while(!sorted){
+            arr = await shuffle(arr);
+            bogoColor()
+            await timeout(5)
+            sorted = isSorted(arr);
+            
+        }
+
+        for (let k = 0; k < arrVals.length; k++) {
+            await new Promise((resolve) =>
+                setTimeout(() => {
+                    resolve();
+                }, 70)
+            );
+
+            arrVals[k].style.backgroundColor = "lime"
+        }
+        document.getElementById("vals").style.transition = "0.05s all ease-in"
+        return arr;
+    }
+
+    async function bogoColor(arr) {
+        
+        arrVals.forEach((elem) => {
+            let randColor;
+            if (elem.style.backgroundColor != "lime")
+                randColor = Math.floor(Math.random()*16777215).toString(16);
+                elem.style.backgroundColor = "#" + randColor;
+        })
+    }
+    document.getElementById("vals").style.transition = "None"
+    return sort(arr);
+}
+
 // selectionSort(); //17sec
 // bubbleSort(); //22sec
 // radixBucketSort(); //16sec
 // insertionSort(); //39sec
 // mergeSort(0, arrVals.length-1) //22sec
-HeapSort()
-
-
+// HeapSort()
+// Bogosort()

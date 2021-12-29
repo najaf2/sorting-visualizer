@@ -582,4 +582,4 @@ async function Bogosort(arr = arrVals){
 // insertionSort(); //39sec
 // mergeSort(0, arrVals.length-1) //22sec
 // HeapSort()
-// Bogosort()
+Bogosort()

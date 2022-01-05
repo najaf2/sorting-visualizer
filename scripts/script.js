@@ -32,7 +32,7 @@ Resizebtn.addEventListener('click', () => {
     do {
         resizeNum = promptResize()
     }
-    while (isNaN(resizeNum) || resizeNum < 1 || resizeNum > 100)
+    while (isNaN(resizeNum) || resizeNum < 1 || resizeNum > 200)
 
     numElements = resizeNum
     randomize()
@@ -99,7 +99,7 @@ bogobtn.addEventListener('click', () => {
 })
 
 function promptResize() {
-    return prompt("Enter a number between 1 and 100.");
+    return prompt("Enter a number between 1 and 200.");
 }
 
 function randomize() {
@@ -734,3 +734,4 @@ function whiteSortbtns() {
         })
     }
 }
+

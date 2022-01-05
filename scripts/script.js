@@ -1,9 +1,113 @@
-
 let outer = document.getElementById("outer");
+let numElements = 30
+let algo = mergeSort
+let arrVals = []
+let visited = new Array(arrVals.length)
+stopped = true
 
-// Create random vals
-randomize();
+const Stopbtn = document.getElementById("Stopbtn")
+const Randbtn = document.getElementById("Randbtn")
+const Resizebtn = document.getElementById("Resizebtn")
+const Sortbtn = document.getElementById("Sortbtn")
 
+const mergebtn = document.getElementById("mergebtn")
+const bubblebtn = document.getElementById("bubblebtn")
+const selectionbtn = document.getElementById("selectionbtn")
+const insertionbtn = document.getElementById("insertionbtn")
+const bogobtn = document.getElementById("bogobtn")
+
+let sortbtns = [mergebtn, bubblebtn, selectionbtn, insertionbtn, bogobtn];
+// selectionSort(); //17sec
+// bubbleSort(); //22sec
+// radixBucketSort(); //16sec
+// insertionSort(); //39sec
+// mergeSort(0, arrVals.length-1) //22sec
+// HeapSort()
+// Bogosort()
+
+randomize()
+
+Randbtn.addEventListener('click', () => {
+    stopped = true
+    whiteSortbtns()
+    randomize()
+})
+Resizebtn.addEventListener('click', () => {
+    stopped = true
+    let resizeNum;
+    whiteSortbtns()
+    do {
+        resizeNum = promptResize()
+    }
+    while(isNaN(resizeNum) || resizeNum < 1 || resizeNum > 100)
+
+    numElements = resizeNum
+    randomize()
+})
+Stopbtn.addEventListener('click', () => {
+    whiteSortbtns()
+    stopped = true;
+})
+
+mergebtn.addEventListener('click', () => {
+    if (checkSorted()) {
+        stopped = true
+        whiteSortbtns()
+    }
+    if (stopped) {
+        stopped = false
+        greySortbtns()
+        mergeSort(0, arrVals.length-1) //22sec
+    }
+})
+bubblebtn.addEventListener('click', () => {
+    if (checkSorted()) {
+        stopped = true
+        whiteSortbtns()
+    }
+    if (stopped) {
+        stopped = false
+        greySortbtns()
+        bubbleSort(); //22sec
+    }
+})
+selectionbtn.addEventListener('click', () => {
+    if (checkSorted()) {
+        stopped = true
+        whiteSortbtns()
+    }
+    if (stopped) {
+        stopped = false
+        greySortbtns()
+        selectionSort(); //17sec
+    }
+})
+insertionbtn.addEventListener('click', () => {
+    if (checkSorted()) {
+        stopped = true
+        whiteSortbtns()
+    }
+    if (stopped) {
+        stopped = false
+        greySortbtns()
+        insertionSort(); //39sec
+    }
+})
+bogobtn.addEventListener('click', () => {
+    if (checkSorted()) {
+        stopped = true
+        whiteSortbtns()
+    }
+    if (stopped) {
+        stopped = false
+        greySortbtns()
+        Bogosort()
+    }
+})
+
+function promptResize() {
+    return prompt("Enter a number between 1 and 100.");
+}
 
 function randomize() {
     // Remove all the vals that are already there
@@ -11,8 +115,8 @@ function randomize() {
         outer.firstChild.remove()
     }
 
-    // Create 20 divs with differing heights
-    for (let i = 0; i < 100; i++) {
+    // Create divs with differing heights
+    for (let i = 0; i < numElements; i++) {
         // Create a val and set its id
         val = document.createElement('div');
         val.id = "vals"
@@ -24,15 +128,18 @@ function randomize() {
         val.style.height = rand + "vh";
     }
 
+    arrVals = document.querySelectorAll("#vals");
+    visited = new Array(arrVals.length)
+    visited.fill(0, 0, arrVals.length - 1)
 }
-arrVals = document.querySelectorAll("#vals");
-let visited = new Array(arrVals.length)
-visited.fill(0, 0, arrVals.length - 1)
+
 
 async function bubbleSort(delay = 100) {
     let n = arrVals.length;
+    running = true
     for (let i = 0; i < n; i++) {
         for (let j = 0; j < n - i - 1; j++) {
+            checkStopped()
             arrVals[j].style.backgroundColor = "#47B880";
             arrVals[j + 1].style.backgroundColor = "#B8477F";
 
@@ -59,13 +166,14 @@ async function bubbleSort(delay = 100) {
 
                 arrVals = document.querySelectorAll("#vals");
             }
-            arrVals[j].style.backgroundColor = "white";
-            arrVals[j + 1].style.backgroundColor = "white";
+            arrVals[j].style.backgroundColor = "whitesmoke";
+            arrVals[j + 1].style.backgroundColor = "whitesmoke";
         }
 
         arrVals[n - i - 1]
             .style.backgroundColor = "lime";
     }
+    checkStopped()
 }
 
 // Promise to swap two blocks
@@ -86,12 +194,14 @@ function swap(x, y, delay) {
 
 async function selectionSort(delay = 50) {
     let n = arrVals.length;
+    running = true
     for (let i = 0; i < n; i++) {
         let min = i;
         let pastMins = []
         arrVals[min].style.backgroundColor = "#B8477F";
         pastMins.push(arrVals[min])
         for (let j = i + 1; j < n; j++) {
+            checkStopped()
             arrVals[j].style.backgroundColor = "#47B880";
             pastMins.push(arrVals[j])
             await new Promise((resolve) =>
@@ -105,28 +215,29 @@ async function selectionSort(delay = 50) {
 
             if (value1 < value2) {
                 min = j;
-                arrVals[j].style.backgroundColor = "white";
+                arrVals[j].style.backgroundColor = "whitesmoke";
                 arrVals[min].style.backgroundColor = "#B8477F";
             }
 
             if (min != j) {
-                arrVals[j].style.backgroundColor = "white";
+                arrVals[j].style.backgroundColor = "whitesmoke";
             }
 
 
         }
         pastMins.forEach((elem) => {
-            elem.style.backgroundColor = "white";
+            elem.style.backgroundColor = "whitesmoke";
         })
 
         if (min != i) {
             await swap(arrVals[i], arrVals[min])
             arrVals = document.querySelectorAll("#vals");
-            arrVals[min].style.backgroundColor = "white";
+            arrVals[min].style.backgroundColor = "whitesmoke";
         }
         arrVals[i].style.backgroundColor = "lime";
 
     }
+    checkStopped()
 }
 
 async function radixBucketSort(delay = 100) {
@@ -169,7 +280,7 @@ async function radixBucketSort(delay = 100) {
                 buckets['0'].push(curr);
             }
 
-            arrVals[idx1].style.backgroundColor = "white"
+            arrVals[idx1].style.backgroundColor = "whitesmoke"
 
             await new Promise((resolve) =>
                 setTimeout(() => {
@@ -202,12 +313,12 @@ async function radixBucketSort(delay = 100) {
                         }, delay)
                     );
 
-                    arrVals[idx3].style.backgroundColor = "white"
+                    arrVals[idx3].style.backgroundColor = "whitesmoke"
 
                 }
             }
 
-            arrVals[idx2].style.backgroundColor = "white"
+            arrVals[idx2].style.backgroundColor = "whitesmoke"
 
         }
         buckets = {};
@@ -248,13 +359,14 @@ async function radixBucketSort(delay = 100) {
 async function insertionSort(delay = 100) {
     let n = arrVals.length;
     arrVals[0].style.backgroundColor = "#B8477F";
+    running = true
 
     for (let i = 1; i < n; i++) {
+        checkStopped()
         // Choosing the first element in our unsorted subarray
         let current = Number(arrVals[i].style.height.replace("vh", ""));
         arrVals[i].style.backgroundColor = "#B8477F";
 
-        console.log(current)
         // The last element of our sorted subarray
         let j = i - 1;
 
@@ -269,7 +381,7 @@ async function insertionSort(delay = 100) {
                 setTimeout(() => {
                     resolve();
                 }, delay));
-
+            checkStopped()
             arrVals[j + 1].style.height = arrVals[j].style.height;
             arrVals[j].style.backgroundColor = "red"
             if (j > 0) {
@@ -299,9 +411,11 @@ async function insertionSort(delay = 100) {
 
         arrVals[i].style.backgroundColor = "lime"
     }
+    running = false
 }
 
 async function merge(start, mid, end, delay) {
+    checkStopped()
     let start2 = mid + 1;
 
     // If the direct merge is already sorted
@@ -312,14 +426,15 @@ async function merge(start, mid, end, delay) {
     // Two pointers to maintain start
     // of both arrays to merge
     while (start <= mid && start2 <= end) {
+        checkStopped()
         arrVals[start].style.backgroundColor = "red"
         arrVals[end].style.backgroundColor = "red"
 
         await timeout(delay);
         // If element 1 is in right place
         if (Number(arrVals[start].style.height.replace("vh", "")) <= Number(arrVals[start2].style.height.replace("vh", ""))) {
-            arrVals[start].style.backgroundColor = "white"
-            arrVals[end].style.backgroundColor = "white"
+            arrVals[start].style.backgroundColor = "whitesmoke"
+            arrVals[end].style.backgroundColor = "whitesmoke"
             start++;
         }
         else {
@@ -335,8 +450,8 @@ async function merge(start, mid, end, delay) {
             arrVals[start].style.height = value.toString() + "vh";
 
             // Update all the pointers
-            arrVals[start].style.backgroundColor = "white"
-            arrVals[end].style.backgroundColor = "white"
+            arrVals[start].style.backgroundColor = "whitesmoke"
+            arrVals[end].style.backgroundColor = "whitesmoke"
 
             start++;
             mid++;
@@ -347,7 +462,8 @@ async function merge(start, mid, end, delay) {
 
 async function mergeColors(l, r, delay) {
     for (let i = l; i < arrVals.length; i++) {
-        arrVals[i].style.backgroundColor = "white"
+        checkStopped()
+        arrVals[i].style.backgroundColor = "whitesmoke"
 
         if (visited[i] == 1) {
 
@@ -371,6 +487,7 @@ async function mergeColors(l, r, delay) {
 }
 
 async function mergeSort(l, r, delay = 100) {
+    checkStopped()
     if (l < r) {
         // Same as (l + r) / 2, but avoids overflow
         // for large l and r
@@ -383,9 +500,12 @@ async function mergeSort(l, r, delay = 100) {
         await mergeColors(l, m, delay)
         await timeout(delay)
     }
+
+
 }
 
 function timeout(ms) {
+    checkStopped()
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -449,12 +569,9 @@ async function colorfy(n, i, delay) {
     let temp1 = n;
     let temp2 = i
 
-    console.log(temp1)
-    console.log(temp2)
-
     arrVals.forEach((elem) => {
         if (elem.style.backgroundColor != "lime")
-            elem.style.backgroundColor = "white"
+            elem.style.backgroundColor = "whitesmoke"
     })
 
 
@@ -520,6 +637,7 @@ function getHeightAsNum(elem) {
 async function Bogosort(arr = arrVals){
     var isSorted = function(arr){
         for(var i = 1; i < arr.length; i++){
+            checkStopped()
             if (getHeightAsNum(arr[i-1]) > getHeightAsNum(arr[i])) {
                 return false;
             }
@@ -529,11 +647,11 @@ async function Bogosort(arr = arrVals){
 
     async function shuffle(arr) {
         for (var i = arr.length - 1; i > 0; i--) {
+            checkStopped()
             var j = Math.floor(Math.random() * (i + 1));
             var temp = getHeightAsNum(arr[i]) + "vh";
             arr[i].style.height = arr[j].style.height;
             arr[j].style.height = temp;
-            console.log("swap")
         }
 
         return arr
@@ -543,6 +661,7 @@ async function Bogosort(arr = arrVals){
     async function sort(arr){
         var sorted = false;
         while(!sorted){
+            checkStopped()
             arr = await shuffle(arr);
             bogoColor()
             await timeout(5)
@@ -576,10 +695,49 @@ async function Bogosort(arr = arrVals){
     return sort(arr);
 }
 
-// selectionSort(); //17sec
-// bubbleSort(); //22sec
-// radixBucketSort(); //16sec
-// insertionSort(); //39sec
-// mergeSort(0, arrVals.length-1) //22sec
-// HeapSort()
-Bogosort()
+function checkStopped() {
+    if (stopped) {
+        stopAll()
+        throw new Error("STOPPPPP");
+    }
+}
+
+function stopAll() {
+    for (let k = 0; k < arrVals.length; k++) {
+        arrVals[k].style.backgroundColor = "whitesmoke"
+    }
+    whiteSortbtns()
+}
+
+function checkSorted() {
+    for(var i = 1; i < arrVals.length; i++){
+        if (getHeightAsNum(arrVals[i-1]) > getHeightAsNum(arrVals[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+function greySortbtns() {
+    for (let i = 0; i < sortbtns.length; i++) {
+        sortbtns[i].style.color = "gray"
+        sortbtns[i].addEventListener('mouseenter', () => {
+            sortbtns[i].style.color = "gray"
+        })
+        sortbtns[i].addEventListener('mouseleave', () => {
+            sortbtns[i].style.color = "gray"
+        })
+    }
+}
+
+function whiteSortbtns() {
+    for (let i = 0; i < sortbtns.length; i++) {
+        sortbtns[i].style.color = "whitesmoke"
+
+        sortbtns[i].addEventListener('mouseenter', () => {
+            sortbtns[i].style.color = "blue"
+        })
+        sortbtns[i].addEventListener('mouseleave', () => {
+            sortbtns[i].style.color = "whitesmoke"
+        })
+    }
+}

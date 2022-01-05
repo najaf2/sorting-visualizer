@@ -17,13 +17,6 @@ const insertionbtn = document.getElementById("insertionbtn")
 const bogobtn = document.getElementById("bogobtn")
 
 let sortbtns = [mergebtn, bubblebtn, selectionbtn, insertionbtn, bogobtn];
-// selectionSort(); //17sec
-// bubbleSort(); //22sec
-// radixBucketSort(); //16sec
-// insertionSort(); //39sec
-// mergeSort(0, arrVals.length-1) //22sec
-// HeapSort()
-// Bogosort()
 
 randomize()
 
@@ -39,7 +32,7 @@ Resizebtn.addEventListener('click', () => {
     do {
         resizeNum = promptResize()
     }
-    while(isNaN(resizeNum) || resizeNum < 1 || resizeNum > 100)
+    while (isNaN(resizeNum) || resizeNum < 1 || resizeNum > 100)
 
     numElements = resizeNum
     randomize()
@@ -57,7 +50,7 @@ mergebtn.addEventListener('click', () => {
     if (stopped) {
         stopped = false
         greySortbtns()
-        mergeSort(0, arrVals.length-1) //22sec
+        mergeSort(0, arrVals.length - 1) //22sec
     }
 })
 bubblebtn.addEventListener('click', () => {
@@ -634,11 +627,11 @@ function getHeightAsNum(elem) {
     return Number(elem.style.height.replace("vh", ""))
 }
 
-async function Bogosort(arr = arrVals){
-    var isSorted = function(arr){
-        for(var i = 1; i < arr.length; i++){
+async function Bogosort(arr = arrVals) {
+    var isSorted = function (arr) {
+        for (var i = 1; i < arr.length; i++) {
             checkStopped()
-            if (getHeightAsNum(arr[i-1]) > getHeightAsNum(arr[i])) {
+            if (getHeightAsNum(arr[i - 1]) > getHeightAsNum(arr[i])) {
                 return false;
             }
         }
@@ -656,17 +649,17 @@ async function Bogosort(arr = arrVals){
 
         return arr
     }
-      
 
-    async function sort(arr){
+
+    async function sort(arr) {
         var sorted = false;
-        while(!sorted){
+        while (!sorted) {
             checkStopped()
             arr = await shuffle(arr);
             bogoColor()
             await timeout(5)
             sorted = isSorted(arr);
-            
+
         }
 
         for (let k = 0; k < arrVals.length; k++) {
@@ -683,12 +676,12 @@ async function Bogosort(arr = arrVals){
     }
 
     async function bogoColor(arr) {
-        
+
         arrVals.forEach((elem) => {
             let randColor;
             if (elem.style.backgroundColor != "lime")
-                randColor = Math.floor(Math.random()*16777215).toString(16);
-                elem.style.backgroundColor = "#" + randColor;
+                randColor = Math.floor(Math.random() * 16777215).toString(16);
+            elem.style.backgroundColor = "#" + randColor;
         })
     }
     document.getElementById("vals").style.transition = "None"
@@ -710,8 +703,8 @@ function stopAll() {
 }
 
 function checkSorted() {
-    for(var i = 1; i < arrVals.length; i++){
-        if (getHeightAsNum(arrVals[i-1]) > getHeightAsNum(arrVals[i])) {
+    for (var i = 1; i < arrVals.length; i++) {
+        if (getHeightAsNum(arrVals[i - 1]) > getHeightAsNum(arrVals[i])) {
             return false;
         }
     }
